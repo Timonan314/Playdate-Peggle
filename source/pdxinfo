@@ -1,6 +1,6 @@
-name=Game
-author=
-description=
+name=Peggle
+author=Tim Nolan
+description=It's peggle
 bundleID=
 version=1.0.0
 buildNumber=1
