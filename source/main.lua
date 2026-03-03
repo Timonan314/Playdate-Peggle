@@ -8,6 +8,9 @@ local pd = playdate
 local gameState = "aim"
 local ballSpawned = false
 
+local ballX = 0
+local ballY = 0
+
 -- ball output stuff
 local outputDist = 30
 local outputX = 200 + outputDist
@@ -15,11 +18,12 @@ local outputY = 0
 local outputYoffset = -30
 local outputXoffset = 0
 local gravity = 9.8
+
+local ballAccel = outputYoffset
+
 function playdate.update()
     gfx.clear()
     gfx.drawCircleAtPoint(200,30,20)
-
-
 
     local quadCount = 1
     local quadx = 200
@@ -53,16 +57,40 @@ function playdate.update()
     gfx.fillCircleAtPoint(outputX, outputY, 5)
 
     local segments = 0
+    local guideLineX = outputX
+    local guideLineY = outputY
+    local guideLineAccel = outputYoffset
     while segments < 50 do
-        gfx.drawLine(outputX,outputY, outputX+outputXoffset/2, outputY+outputYoffset/2)
-        outputX += outputXoffset/2
-        outputY += outputYoffset/2
-        outputYoffset += gravity/2
+        gfx.drawLine(guideLineX,guideLineY, guideLineX+outputXoffset/2, guideLineY+guideLineAccel/2)
+        guideLineX += outputXoffset/2
+        guideLineY += guideLineAccel/2
+        guideLineAccel += gravity/2
         segments += 1
     end
 
     if playdate.buttonIsPressed(pd.kButtonB) and gameState == "aim" then
         gameState = "shoot"
+        ballX = outputX
+        ballY = outputY
         ballSpawned = true
+        ballAccel = outputYoffset
+        Xiv = outputXoffset
+        Yiv = outputYoffset
     end
+
+    local ballSpeed = 5
+    if gameState == "shoot" and ballSpawned == true then
+        gfx.setColor(gfx.kColorWhite)
+        gfx.fillCircleAtPoint(ballX,ballY,10)
+        gfx.setColor(gfx.kColorBlack)
+        gfx.fillCircleAtPoint(ballX,ballY,8)
+        ballX += Xiv/ballSpeed
+        ballY += ballAccel/ballSpeed
+        ballAccel += gravity/ballSpeed
+    end
+
+    if ballY > 400 then
+        gameState = "aim"
+    end
+
 end

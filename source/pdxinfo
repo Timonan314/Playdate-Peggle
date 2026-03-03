@@ -2,5 +2,5 @@ name=Peggle
 author=Tim Nolan
 description=It's peggle
 bundleID=
-version=1.0.0
+version=0.0.3
 buildNumber=1
